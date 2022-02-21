@@ -1,0 +1,13 @@
+@import "../variables.scss";
+.card {
+  margin: auto;
+  max-width: 70rem;
+  display: flex;
+  background-color: lighten($primary, 7);
+  padding: 1rem;
+  font-size: 1.2rem;
+  justify-content: space-between;
+  border-radius: 5px;
+  align-items: center;
+  margin-bottom: 1rem;
+}

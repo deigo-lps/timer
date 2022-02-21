@@ -9,11 +9,20 @@ body {
   background-color: $primary;
   color:white;
   button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: lighten($primary,15);
     cursor: pointer;
     border:none;
     color:white;
     border-radius:5px;
+    width:2.4rem;
+    height:2.4rem;
+    svg{
+      width:1.2rem;
+      fill:lighten($primary,40);
+    }
     &:hover{
       background-color: lighten($primary,20);
     }
@@ -26,6 +35,7 @@ body {
     color:white;
     &:focus{
       outline: none;
+      border-width: 2px;
     }
     &::placeholder{
       color: lighten($primary,40);
