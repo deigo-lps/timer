@@ -1,0 +1,39 @@
+@import "./variables.scss";
+@import "./reset.scss";
+body {
+  padding:1rem;
+  margin: 0;
+  font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: $primary;
+  color:white;
+  button{
+    background-color: lighten($primary,15);
+    cursor: pointer;
+    border:none;
+    color:white;
+    border-radius:5px;
+    &:hover{
+      background-color: lighten($primary,20);
+    }
+  }
+  input{
+    background-color: lighten($primary,15);
+    border:1px solid lighten($primary,25);
+    border-radius:5px;
+    padding:0.4rem;
+    color:white;
+    &:focus{
+      outline: none;
+    }
+    &::placeholder{
+      color: lighten($primary,40);
+    }
+  }
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
