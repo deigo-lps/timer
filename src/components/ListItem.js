@@ -39,6 +39,17 @@ const ListItem = (props) => {
 
   const handleInit = () => {
     setStarted((started) => !started);
+    if (started) {
+      ctx.updateHandler({
+        key: props.item.key,
+        name: props.item.name,
+        time: {
+          h: time.h,
+          m: time.m,
+          s: time.s,
+        },
+      });
+    }
   };
 
   const deleteHandler = () => {
