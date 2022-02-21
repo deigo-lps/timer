@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useEffect, useState} from "react";
 
 const ItemsContext = React.createContext({
   items:[],
@@ -8,6 +8,10 @@ const ItemsContext = React.createContext({
 
 export const ItemsContestProvider = (props) =>{
   const [items,setItems] = useState([]);
+
+  useEffect(()=>{
+
+  },[]);
 
   const addHandler = (item) =>{
     setItems(items=>[item,...items]);

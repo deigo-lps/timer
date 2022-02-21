@@ -10,7 +10,7 @@ const Form = (props) => {
     ctx.addHandler({
       key: Math.random(),
       name:nome.current.value,
-      time: 0
+      time: {h:0,m:0,s:0}
     })
   };
 
