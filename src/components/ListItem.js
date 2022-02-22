@@ -1,7 +1,10 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { useBeforeunload } from "react-beforeunload";
 import Card from "./Card";
-import ItemsContext from "../store/items-context";
+
+import { useDispatch } from "react-redux";
+import { itemsActions } from "../store";
+
 const play = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
     {/* Font Awesome Pro 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}
@@ -14,34 +17,19 @@ const pause = (
     <path d="M272 63.1l-32 0c-26.51 0-48 21.49-48 47.1v288c0 26.51 21.49 48 48 48L272 448c26.51 0 48-21.49 48-48v-288C320 85.49 298.5 63.1 272 63.1zM80 63.1l-32 0c-26.51 0-48 21.49-48 48v288C0 426.5 21.49 448 48 448l32 0c26.51 0 48-21.49 48-48v-288C128 85.49 106.5 63.1 80 63.1z" />
   </svg>
 );
+
+
 const ListItem = (props) => {
+  const dispatch = useDispatch();
   const [started, setStarted] = useState(false);
-  const [time, setTime] = useState({
-    h: props.item.time.h,
-    m: props.item.time.m,
-    s: props.item.time.s,
-  });
-  const ctx = useContext(ItemsContext);
 
   useEffect(() => {
     let interval;
     if (started) {
       interval = setInterval(() => {
-        setTime((time) => {
-          var hora = time.h;
-          var minuto = time.m;
-          var segundo = time.s;
-          segundo++;
-          if (segundo === 60) {
-            segundo = 0;
-            minuto++;
-          }
-          if (minuto === 60) {
-            minuto = 0;
-            hora++;
-          }
-          return { h: hora, m: minuto, s: segundo };
-        });
+        dispatch(
+          itemsActions.incrementTime(props.item)
+        )
       }, 1000);
     } else {
       clearInterval(interval);
@@ -49,33 +37,23 @@ const ListItem = (props) => {
     return () => {
       clearInterval(interval);
     };
-  }, [started, time]);
-
-  const updateHandler = () => {
-    ctx.updateHandler({
-      key: props.item.key,
-      name: props.item.name,
-      time: {
-        h: time.h,
-        m: time.m,
-        s: time.s,
-      },
-    });
-  };
+  }, [started,dispatch,props.item]);
 
   useBeforeunload(() => {
-    updateHandler();
+    dispatch(itemsActions.updateItem());
   });
 
   const handleInit = () => {
     setStarted((started) => !started);
     if (started) {
-      updateHandler();
+      dispatch(itemsActions.updateItem());
     }
   };
 
   const deleteHandler = () => {
-    ctx.deleteHandler(props.item.key);
+    dispatch(
+      itemsActions.deleteItem(props.item.key)
+    );
   };
 
   const convert = (string) => ("0" + string.toString()).slice(-2);
@@ -86,7 +64,7 @@ const ListItem = (props) => {
         <p>{props.item.name}</p>
         <div>
           <p>
-            {convert(time.h)}:{convert(time.m)}:{convert(time.s)}
+            {convert(props.item.time.h)}:{convert(props.item.time.m)}:{convert(props.item.time.s)}
           </p>
           <button onClick={handleInit}>{started ? pause : play}</button>
           <button onClick={deleteHandler}>
