@@ -8,7 +8,7 @@ const ItemsContext = React.createContext({
 });
 
 export const ItemsContestProvider = (props) => {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState({});
 
   useEffect(() => {
     const newItems = JSON.parse(localStorage.getItem("data"));
@@ -18,23 +18,26 @@ export const ItemsContestProvider = (props) => {
   }, []);
 
   const addHandler = (item) => {
-    setItems((items) => [item, ...items]);
+    setItems((items) => {
+      var newItems = {...items};
+      newItems[item.key]=item;
+      return newItems;
+    });
   };
 
   const deleteHandler = (key) => {
     setItems((items) => {
-      var newItems = items.filter((item) => item.key !== key);
-      localStorage.setItem("data", JSON.stringify(newItems));
+      const newItems={...items};
+      delete newItems[key];
       return newItems;
     });
   };
 
   const updateHandler = (item) => {
     setItems((items) => {
-      var newItems = [...items].filter((obj) => obj.key !== item.key);
-      newItems.unshift(item);
-      localStorage.setItem("data", JSON.stringify(newItems));
-      return newItems;
+      items[item.key].time=item.time;
+      localStorage.setItem("data", JSON.stringify(items));
+      return items;
     });
   };
 
