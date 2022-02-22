@@ -1,19 +1,25 @@
-import React, { useState, useContext } from "react";
-import ItemsContext from "../store/items-context";
+import React, { useState } from "react";
 import Card from "./Card";
 import "./Form.scss";
+
+import { useDispatch } from "react-redux";
+import { itemsActions } from "../store";
+
 const Form = (props) => {
   const [name, setName] = useState("");
-  const ctx = useContext(ItemsContext);
+
+  const dispatch = useDispatch();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (name.trim() !== "") {
-      ctx.addHandler({
-        key: Math.random(),
-        name: name,
-        time: { h: 0, m: 0, s: 0 },
-      });
+      dispatch(
+        itemsActions.addItem({
+          key: Math.random(),
+          name: name,
+          time: { h: 0, m: 0, s: 0 },
+        })
+      )
       setName("");
     }
   };

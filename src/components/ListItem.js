@@ -1,7 +1,10 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { useBeforeunload } from "react-beforeunload";
 import Card from "./Card";
-import ItemsContext from "../store/items-context";
+
+import { useDispatch } from "react-redux";
+import { itemsActions } from "../store";
+
 const play = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
     {/* Font Awesome Pro 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}
@@ -14,14 +17,16 @@ const pause = (
     <path d="M272 63.1l-32 0c-26.51 0-48 21.49-48 47.1v288c0 26.51 21.49 48 48 48L272 448c26.51 0 48-21.49 48-48v-288C320 85.49 298.5 63.1 272 63.1zM80 63.1l-32 0c-26.51 0-48 21.49-48 48v288C0 426.5 21.49 448 48 448l32 0c26.51 0 48-21.49 48-48v-288C128 85.49 106.5 63.1 80 63.1z" />
   </svg>
 );
+
+
 const ListItem = (props) => {
+  const dispatch = useDispatch();
   const [started, setStarted] = useState(false);
   const [time, setTime] = useState({
     h: props.item.time.h,
     m: props.item.time.m,
     s: props.item.time.s,
   });
-  const ctx = useContext(ItemsContext);
 
   useEffect(() => {
     let interval;
@@ -52,15 +57,17 @@ const ListItem = (props) => {
   }, [started, time]);
 
   const updateHandler = () => {
-    ctx.updateHandler({
-      key: props.item.key,
-      name: props.item.name,
-      time: {
-        h: time.h,
-        m: time.m,
-        s: time.s,
-      },
-    });
+    dispatch(
+      itemsActions.updateItem({
+        key: props.item.key,
+        name: props.item.name,
+        time: {
+          h: time.h,
+          m: time.m,
+          s: time.s,
+        },
+      })
+    );
   };
 
   useBeforeunload(() => {
@@ -75,7 +82,9 @@ const ListItem = (props) => {
   };
 
   const deleteHandler = () => {
-    ctx.deleteHandler(props.item.key);
+    dispatch(
+      itemsActions.deleteItem(props.item.key)
+    );
   };
 
   const convert = (string) => ("0" + string.toString()).slice(-2);
