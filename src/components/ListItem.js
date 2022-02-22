@@ -22,31 +22,14 @@ const pause = (
 const ListItem = (props) => {
   const dispatch = useDispatch();
   const [started, setStarted] = useState(false);
-  const [time, setTime] = useState({
-    h: props.item.time.h,
-    m: props.item.time.m,
-    s: props.item.time.s,
-  });
 
   useEffect(() => {
     let interval;
     if (started) {
       interval = setInterval(() => {
-        setTime((time) => {
-          var hora = time.h;
-          var minuto = time.m;
-          var segundo = time.s;
-          segundo++;
-          if (segundo === 60) {
-            segundo = 0;
-            minuto++;
-          }
-          if (minuto === 60) {
-            minuto = 0;
-            hora++;
-          }
-          return { h: hora, m: minuto, s: segundo };
-        });
+        dispatch(
+          itemsActions.incrementTime(props.item)
+        )
       }, 1000);
     } else {
       clearInterval(interval);
@@ -54,30 +37,16 @@ const ListItem = (props) => {
     return () => {
       clearInterval(interval);
     };
-  }, [started, time]);
-
-  const updateHandler = () => {
-    dispatch(
-      itemsActions.updateItem({
-        key: props.item.key,
-        name: props.item.name,
-        time: {
-          h: time.h,
-          m: time.m,
-          s: time.s,
-        },
-      })
-    );
-  };
+  }, [started,dispatch,props.item]);
 
   useBeforeunload(() => {
-    updateHandler();
+    dispatch(itemsActions.updateItem());
   });
 
   const handleInit = () => {
     setStarted((started) => !started);
     if (started) {
-      updateHandler();
+      dispatch(itemsActions.updateItem());
     }
   };
 
@@ -95,7 +64,7 @@ const ListItem = (props) => {
         <p>{props.item.name}</p>
         <div>
           <p>
-            {convert(time.h)}:{convert(time.m)}:{convert(time.s)}
+            {convert(props.item.time.h)}:{convert(props.item.time.m)}:{convert(props.item.time.s)}
           </p>
           <button onClick={handleInit}>{started ? pause : play}</button>
           <button onClick={deleteHandler}>

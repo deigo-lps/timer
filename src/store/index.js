@@ -13,9 +13,19 @@ const itemsSlice = createSlice({
     deleteItem(state,action){
       delete state.items[action.payload];
     },
-    updateItem(state,action){
-      state.items[action.payload.key].time=action.payload.time
+    updateItem(state){
       localStorage.setItem("data", JSON.stringify(state.items));
+    },
+    incrementTime(state,action){
+      state.items[action.payload.key].time.s++;
+      if (state.items[action.payload.key].time.s === 60) {
+        state.items[action.payload.key].time.s = 0;
+        state.items[action.payload.key].time.m++;
+      }
+      if (state.items[action.payload.key].time.m === 60) {
+        state.items[action.payload.key].time.m = 0;
+        state.items[action.payload.key].time.h++;
+      }
     }
   }
 });

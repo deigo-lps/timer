@@ -17,7 +17,7 @@ export default function List() {
         itemsActions.initItems(newItems)
       )
     }
-  }, []);
+  }, [dispatch]);
 
   const items = useSelector((state)=>state.items)
   return (
