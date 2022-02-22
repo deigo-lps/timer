@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
-import Card from './Card'
+import { useBeforeunload } from "react-beforeunload";
+import Card from "./Card";
 import ItemsContext from "../store/items-context";
 const play = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
@@ -50,18 +51,26 @@ const ListItem = (props) => {
     };
   }, [started, time]);
 
+  const updateHandler = () =>{
+    ctx.updateHandler({
+      key: props.item.key,
+      name: props.item.name,
+      time: {
+        h: time.h,
+        m: time.m,
+        s: time.s,
+      },
+    });
+  }
+
+  useBeforeunload(() => {
+    updateHandler();
+  });
+
   const handleInit = () => {
     setStarted((started) => !started);
     if (started) {
-      ctx.updateHandler({
-        key: props.item.key,
-        name: props.item.name,
-        time: {
-          h: time.h,
-          m: time.m,
-          s: time.s,
-        },
-      });
+      updateHandler();
     }
   };
 
