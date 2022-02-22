@@ -1,25 +1,31 @@
-import React, { useRef, useContext } from "react";
+import React, { useState, useContext } from "react";
 import ItemsContext from "../store/items-context";
 import Card from "./Card";
 import "./Form.scss";
 const Form = (props) => {
+  const [name, setName] = useState("");
   const ctx = useContext(ItemsContext);
-  const nome = useRef();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (nome.current.value.trim() !== "")
+    if (name.trim() !== "") {
       ctx.addHandler({
         key: Math.random(),
-        name: nome.current.value,
+        name: name,
         time: { h: 0, m: 0, s: 0 },
       });
+      setName("");
+    }
+  };
+
+  const handleInputName = (event) => {
+    setName(event.target.value);
   };
 
   return (
     <form className="form" onSubmit={handleSubmit}>
       <Card>
-        <input ref={nome} placeholder="Nome" />
+        <input onChange={handleInputName} value={name} placeholder="Nome" />
         <button>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
             {/*Font Awesome Pro 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc.*/}
