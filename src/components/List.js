@@ -8,8 +8,11 @@ export default function List() {
   const ctx = useContext(ItemsContext);
   return (
     <ul className="list">
-      {ctx.items.length !== 0 ? (
-        ctx.items.map((item) => <ListItem item={item} key={item.key} />)
+      {}
+      {Object.keys(ctx.items).length !== 0 ? (
+        Object.keys(ctx.items).map((key) => (
+          <ListItem item={ctx.items[key]} key={key} />
+        ))
       ) : (
         <Card>
           <p>sem itens.</p>
