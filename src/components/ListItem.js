@@ -51,7 +51,7 @@ const ListItem = (props) => {
     };
   }, [started, time]);
 
-  const updateHandler = () =>{
+  const updateHandler = () => {
     ctx.updateHandler({
       key: props.item.key,
       name: props.item.name,
@@ -61,7 +61,7 @@ const ListItem = (props) => {
         s: time.s,
       },
     });
-  }
+  };
 
   useBeforeunload(() => {
     updateHandler();
@@ -78,13 +78,15 @@ const ListItem = (props) => {
     ctx.deleteHandler(props.item.key);
   };
 
+  const convert = (string) => ("0" + string.toString()).slice(-2);
+
   return (
     <li>
       <Card>
         <p>{props.item.name}</p>
         <div>
           <p>
-            {time.h}:{time.m}:{time.s}
+            {convert(time.h)}:{convert(time.m)}:{convert(time.s)}
           </p>
           <button onClick={handleInit}>{started ? pause : play}</button>
           <button onClick={deleteHandler}>
